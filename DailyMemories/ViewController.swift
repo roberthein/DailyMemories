@@ -10,13 +10,19 @@ import UIKit
 import Vision
 import CoreML
 
+
+
 class ViewController: UIViewController {
 
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var captionLabel: UILabel!
+    @IBOutlet var cameraButton: UIButton!
+    
     let imagePickerController = UIImagePickerController()
     let formatter = DateFormatter()
+    
+    let tintColor = UIColor(red: 255/255, green: 8/255, blue: 127/255, alpha: 1)
     
     var currentDateString: String {
         let now = Date()
@@ -30,19 +36,27 @@ class ViewController: UIViewController {
         imagePickerController.delegate = self
         
         formatter.dateFormat = "MMM dd, YYYY"
+        
+        cameraButton.backgroundColor = tintColor
+        cameraButton.layer.cornerRadius = 50
+        
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
+        
+        captionLabel.font = UIFont(name: "ArialRoundedMTBold", size: 20)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        dateLabel.text = currentDateString
+        dateLabel.text = ""
     }
     
     
     @IBAction func takePhoto() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePickerController.sourceType = .camera
-            imagePickerController.cameraDevice = .front
+            imagePickerController.cameraDevice = .rear
         }
         
         imagePickerController.allowsEditing = true
@@ -52,42 +66,101 @@ class ViewController: UIViewController {
     // 👀🤖 VISION + CORE ML WORK STARTS HERE
     private func classifyScene(from image: UIImage) {
         
-        // 1. Create Vision Core ML model
+        let model = GoogLeNetPlaces()
+        guard let visionCoreMLModel = try? VNCoreMLModel(for: model.model) else { return }
         
-        // 👩🏻‍💻 YOUR CODE GOES HERE
+        let sceneClassificationRequest = VNCoreMLRequest(model: visionCoreMLModel, completionHandler: handleClassificationResults)
+        let faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: handleFaceDetectionResults)
         
-        // 2. Create Vision Core ML request
-
-        // 👨🏽‍💻 YOUR CODE GOES HERE
-
-        // 3. Create request handler
-        // *First convert image: UIImage to CGImage + get CGImagePropertyOrientation (helper method)*
+        guard let cgImage = image.cgImage else {
+            fatalError("Unable to convert \(image) to CGImage.")
+        }
         
-        // 👨🏼‍💻 YOUR CODE GOES HERE
+        let cgImageOrientation = CGImagePropertyOrientation(rawValue: UInt32(image.imageOrientation.rawValue))!
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: cgImageOrientation)
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                try handler.perform([faceDetectionRequest, sceneClassificationRequest])
+            } catch {
+                print("Error performing scene classification")
+            }
+        }
+    }
     
-        // 4. Perform request on handler
-        // Ensure that it is done on an appropriate queue (not main queue)
+    private func handleFaceDetectionResults(request: VNRequest, error: Error?) {
         
-        // 👩🏼‍💻 YOUR CODE GOES HERE
+        DispatchQueue.main.async {
+            self.imageView.subviews.forEach { $0.removeFromSuperview() }
+            request.results?.flatMap { $0 as? VNFaceObservation }.forEach { self.addFaceBoxView(faceBoundingBox: $0.boundingBox) }
+        }
+    }
+    
+    
+    
+    private func addFaceBoxView(faceBoundingBox: CGRect) {
+        let boxViewFrame = transformRect(visionRect: faceBoundingBox, imageViewRect: imageView.frame).insetBy(dx: -20, dy: -20)
+        let borderFrame = CGRect(x: 0, y: 0, width: boxViewFrame.width, height: boxViewFrame.height)
+        
+        let border = CAShapeLayer()
+        border.strokeColor = tintColor.cgColor
+        border.lineCap = kCALineCapRound
+        border.lineJoin = kCALineJoinRound
+        border.lineWidth = 5
+        border.lineDashPattern = [5, 10]
+        border.frame = borderFrame
+        border.fillColor = nil
+        border.path = UIBezierPath(ovalIn: borderFrame).cgPath
+        
+        let faceBoxView = UIView()
+        faceBoxView.frame = boxViewFrame
+        faceBoxView.layer.addSublayer(border)
+        
+        imageView.addSubview(faceBoxView)
+    }
+    
+    private func transformRect(visionRect: CGRect , imageViewRect: CGRect) -> CGRect {
+        
+        var mappedRect = CGRect()
+        mappedRect.size.width = visionRect.size.width * imageViewRect.size.width
+        mappedRect.size.height = visionRect.size.height * imageViewRect.size.height
+        mappedRect.origin.y = imageViewRect.height - imageViewRect.height * visionRect.origin.y
+        mappedRect.origin.y  = mappedRect.origin.y -  mappedRect.size.height
+        mappedRect.origin.x =  visionRect.origin.x * imageViewRect.size.width
+        
+        return mappedRect
     }
     
     // 5. Do something with the results
     // - Update the caption label
     // - Ensure that it is dispatched on the main queue, because we are updating the UI
     private func handleClassificationResults(for request: VNRequest, error: Error?) {
-        
-        // 👨🏿‍💻 YOUR CODE GOES HERE
-        
+        DispatchQueue.main.async {
+            guard let classifications = request.results as? [VNClassificationObservation],
+                classifications.isEmpty != true else {
+                    self.captionLabel.text = "Unable to classify scene.\n\(error!.localizedDescription)"
+                    return
+            }
+            self.updateCaptionLabel(classifications)
+        }
+    }
+    
+    private func showRecognitionFailureAlert() {
+        let alertController = UIAlertController.init(title: "Recognition Failure", message: "Please try another image.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction.init(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
     // MARK: Helper methods
     
     private func updateCaptionLabel(_ classifications: [VNClassificationObservation]) {
-        let topTwoClassifications = classifications.prefix(2)
-        let descriptions = topTwoClassifications.map { classification in
-            return String(format: "  (%.2f) %@", classification.confidence, classification.identifier)
-        }
-        self.captionLabel.text = "Classification:\n" + descriptions.joined(separator: "\n")
+        let topTwoClassifications = [classifications.first!, classifications.last!]
+
+        let descriptions = [
+            "Probably a \(topTwoClassifications[0].identifier.replacingOccurrences(of: "_", with: " ")) 🤔",
+            "Not a \(topTwoClassifications[1].identifier.replacingOccurrences(of: "_", with: " ")) 🤷‍♀️"
+        ]
+        captionLabel.text = descriptions.joined(separator: "\n")
     }
     
     private func convertToCGImageOrientation(from uiImage: UIImage) -> CGImagePropertyOrientation {

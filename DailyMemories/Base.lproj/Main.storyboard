@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Sa4-db-aJD">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                                <rect key="frame" x="10" y="20" width="355" height="355"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Sa4-db-aJD" secondAttribute="height" multiplier="1:1" id="kxC-EH-B9w"/>
                                 </constraints>
@@ -29,20 +29,13 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="P9l-Sd-LYO"/>
                                 </constraints>
-                                <attributedString key="attributedText">
-                                    <fragment content="September 4, 2017">
-                                        <attributes>
-                                            <font key="NSFont" size="18" name="HelveticaNeue-Thin"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
+                                <attributedString key="attributedText"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbt-Rg-XBd">
-                                <rect key="frame" x="20" y="427" width="335" height="95"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbt-Rg-XBd">
+                                <rect key="frame" x="20" y="427" width="335" height="21"/>
                                 <attributedString key="attributedText">
-                                    <fragment content="no memory yet :(">
+                                    <fragment content="no picture yet">
                                         <attributes>
                                             <font key="NSFont" size="18" name="HelveticaNeue"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
@@ -51,19 +44,21 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NVi-eY-uNL">
-                                <rect key="frame" x="87" y="595" width="200" height="40"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NVi-eY-uNL">
+                                <rect key="frame" x="137.5" y="535" width="100" height="100"/>
                                 <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="6sN-k6-YnH"/>
-                                    <constraint firstAttribute="height" constant="40" id="d8e-zD-Hi7"/>
+                                    <constraint firstAttribute="width" constant="100" id="6sN-k6-YnH"/>
+                                    <constraint firstAttribute="height" constant="100" id="d8e-zD-Hi7"/>
                                 </constraints>
                                 <state key="normal">
                                     <attributedString key="attributedTitle">
-                                        <fragment content="capture daily memory">
+                                        <fragment content="📷">
                                             <attributes>
                                                 <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <font key="NSFont" size="16" name="HelveticaNeue-Bold"/>
+                                                <font key="NSFont" size="48" name="AppleColorEmoji"/>
+                                                <font key="NSOriginalFont" size="16" name="HelveticaNeue-Bold"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                             </attributes>
                                         </fragment>
                                     </attributedString>
@@ -80,16 +75,17 @@
                             <constraint firstItem="gKZ-ER-t5v" firstAttribute="top" secondItem="Sa4-db-aJD" secondAttribute="bottom" constant="20" id="Stm-wf-Rh0"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="NVi-eY-uNL" secondAttribute="bottom" constant="32" id="Y4Q-nW-ZnD"/>
                             <constraint firstItem="cbt-Rg-XBd" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="dcr-NQ-C7C"/>
-                            <constraint firstItem="Sa4-db-aJD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="f0p-YZ-hmu"/>
+                            <constraint firstItem="Sa4-db-aJD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="f0p-YZ-hmu"/>
                             <constraint firstItem="gKZ-ER-t5v" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="fUw-0A-dJX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Sa4-db-aJD" secondAttribute="top" constant="20" id="j3b-ER-Awz"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Sa4-db-aJD" secondAttribute="trailing" id="lYJ-8Q-6QV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Sa4-db-aJD" secondAttribute="top" id="j3b-ER-Awz"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Sa4-db-aJD" secondAttribute="trailing" constant="10" id="lYJ-8Q-6QV"/>
                             <constraint firstItem="NVi-eY-uNL" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="mpd-dJ-8dV"/>
                             <constraint firstItem="cbt-Rg-XBd" firstAttribute="top" secondItem="gKZ-ER-t5v" secondAttribute="bottom" constant="10" id="zuN-bd-oRj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="cameraButton" destination="NVi-eY-uNL" id="6o4-dB-PUd"/>
                         <outlet property="captionLabel" destination="cbt-Rg-XBd" id="NJe-dy-WoR"/>
                         <outlet property="dateLabel" destination="gKZ-ER-t5v" id="2xY-0E-vTp"/>
                         <outlet property="imageView" destination="Sa4-db-aJD" id="4se-q1-Njr"/>
